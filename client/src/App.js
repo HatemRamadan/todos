@@ -4,6 +4,7 @@ import logo from './logo.svg';
 
 import './App.css';
 
+// TODO: change this to functional component so we can use React hooks (useState, useEffect,...)
 class App extends Component {
   state = {
     method: 'GET',
@@ -13,13 +14,13 @@ class App extends Component {
     title: '',
     order: '',
     completed: false,
-
+    assignee_id: '',
     response: [],
   };
   
   handleSubmit = async e => {
     e.preventDefault();
-    let { method, id, title, order, completed } = this.state;
+    let { method, id, title, order, completed, assignee_id } = this.state;
     
     let request = {
       method,
@@ -30,10 +31,12 @@ class App extends Component {
 
     // Undefined ensures not changing to empty string.
     title = title ? title : undefined;
+    // TODO: verify that order and assignee are numbers! show error otherwise
     order = order ? Number(order) : undefined;
+    assignee_id = assignee_id ? Number(assignee_id) : undefined;
 
     if (method !== "GET")
-      request.body = JSON.stringify({ title, order, completed })
+      request.body = JSON.stringify({ title, order, completed, assignee_id })
 
     this.setState({ lastRequest: `${method} at /${id}`});
     // Code smells, but the setup of todo-backend with get('/') returning a list of todos requires
@@ -73,11 +76,12 @@ class App extends Component {
   };
   
   render() {
-    const { method, lastRequest, id, title, order, completed, response } = this.state;
+    const { method, lastRequest, id, title, order, completed, response, assignee_id } = this.state;
 
     const shouldDisplayIdInput = method !== "POST";
     const shouldDisplayTitleInput = method === "POST" || method === "PATCH";
     const shouldDisplayOrderInput = method === "POST" || method === "PATCH";
+    const shouldDisplayAssigneeInput = method === 'POST';
     const shouldDisplayCompletedInput = method === "PATCH";
 
     return (
@@ -119,6 +123,13 @@ class App extends Component {
             placeholder="order (int)"
             value={order}
             onChange={e => this.setState({ order: e.target.value })}
+          />
+          <input
+            disabled={!shouldDisplayAssigneeInput}
+            type="text"
+            placeholder="assignee id (int)"
+            value={assignee_id}
+            onChange={e => this.setState({ assignee_id: e.target.value })}
           />
 
           <label>

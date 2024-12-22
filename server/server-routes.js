@@ -26,7 +26,7 @@ async function getTodo(req, res) {
 }
 
 async function postTodo(req, res) {
-  const created = await todos.create(req.body.title, req.body.order);
+  const created = await todos.create(req.body.title, req.body.order, req.body.assignee_id);
   return res.send(createToDo(req, created));
 }
 

@@ -9,8 +9,8 @@ async function get(id) {
     return results[0];
 }
 
-async function create(title, order) {
-    const results = await knex('todos').insert({ title, order }).returning('*');
+async function create(title, order, assignee) {
+    const results = await knex('todos').insert({ title, order, assignee }).returning('*');
     return results[0];
 }
 
