@@ -6,6 +6,11 @@ async function create(name, email) {
     return results[0];
 }
 
+async function all() {
+    return knex('users');
+}
+
 module.exports = {
-    create
+    create,
+    all
 }

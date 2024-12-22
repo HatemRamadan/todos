@@ -8,6 +8,12 @@ async function createUser(req, res) {
   return res.send(created);
 }
 
+async function getAllUsers(req, res) {
+  const allUsers = await users.all();
+  return res.send(allUsers);
+}
+
+
 function addErrorReporting(func, message) {
     return async function(req, res) {
         try {
@@ -23,6 +29,7 @@ function addErrorReporting(func, message) {
 
 const toExport = {
     createUser: { method: createUser, errorMessage: "Could not create user" },
+    getAllUsers: { method: getAllUsers, errorMessage: "Could not get all users" }
 }
 
 for (let route in toExport) {
