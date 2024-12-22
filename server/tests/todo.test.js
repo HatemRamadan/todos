@@ -124,6 +124,13 @@ describe(`Todo-Backend API residing at http://localhost:${process.env.PORT}`, ()
             expect(patchedTodo).not.toMatchObject(expect.objectContaining(initialTitle));
         });
 
+        it("can assign a user to the todo by POSTing to the todo's url", async () => {
+            const todoUrl = await createFreshTodoAndGetItsUrl();
+            const patchedTodo = await request.post(`${todoUrl}/assign-user`, { assignee_id: 1 }).then(getBody);
+            expect(patchedTodo).toMatchObject(expect.objectContaining({ assignee: 1 }));
+            expect(patchedTodo).not.toMatchObject(expect.objectContaining({ assignee: null }));
+        });
+
         it("can change the todo's completedness by PATCHing to the todo's url", async () => {
             const urlForNewTodo = await createFreshTodoAndGetItsUrl()
             const patchedTodo = await request.patch(urlForNewTodo, { completed: true }).then(getBody);
