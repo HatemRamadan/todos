@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 
+import TodoAssignment from './TodoAssignment';
 import logo from './logo.svg';
 
 import './App.css';
@@ -161,6 +162,7 @@ class App extends Component {
             })
           }
         </p>
+        <TodoAssignment />
       </div>
     );
   }
