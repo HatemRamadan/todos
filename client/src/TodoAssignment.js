@@ -1,10 +1,28 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-// TODO: change this to functional component so we can use React hooks (useState, useEffect,...)
 function TodoAssignment() {
     const [todoId, setTodoId] = useState('');
     const [assigneeId, setAssigneeId] = useState('');
+    const [users, setUsers] = useState([]);
 
+    // Fetch users from the server
+    useEffect(() => {
+        const fetchUsers = async () => {
+            let request = {
+                method: 'GET',
+                headers: {
+                  'Content-Type': 'application/json',
+                }
+              };
+            const response = await fetch(`http://localhost:5000/user`, request);
+            const fetchedUsers = await response.json();
+            setUsers(fetchedUsers);
+        };
+
+        void fetchUsers();
+    }, []);
+
+    // Sends a request to the backend to assign user to a todo
     const assignUser = async e => {
         e.preventDefault();
         let request = {
@@ -22,6 +40,11 @@ function TodoAssignment() {
         else 
             alert('failure')
     }
+
+    // Listens to the select input change and update the assignee accordingly
+    const changeAssigne = (event) => {
+        setAssigneeId(event.target.value);
+      };
     return <>
         <form onSubmit={assignUser}>
             <input
@@ -31,12 +54,9 @@ function TodoAssignment() {
                 onChange={e => setTodoId(e.target.value)}
             />
 
-            <input
-                type="text"
-                placeholder="assignee id (int)"
-                value={assigneeId}
-                onChange={e => setAssigneeId(e.target.value)}
-            />
+            <select value={assigneeId} onChange={changeAssigne}>{
+                users.map(user => <option value={user.id}>{user.name}</option>)}
+            </select>
             <button type='submit'>Assign user</button>
         </form>
         </>;
