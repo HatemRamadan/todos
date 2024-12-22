@@ -10,6 +10,7 @@ function createToDo(req, data) {
     title: data.title,
     order: data.order,
     completed: data.completed || false,
+    assignee: data.assignee,
     url: `${protocol}://${host}/${id}`
   };
 }
@@ -44,6 +45,17 @@ async function deleteTodo(req, res) {
   return res.send(createToDo(req, deleted));
 }
 
+async function assignUser(req, res) {
+  const updated = await todos.update(req.params.id, { assignee: req.body.assignee_id });
+  return res.send(createToDo(req, updated));
+}
+
+async function unassignUser(req, res) {
+  const updated = await todos.update(req.params.id, { assignee: null });
+  return res.send(createToDo(req, updated));
+}
+
+
 function addErrorReporting(func, message) {
     return async function(req, res) {
         try {
@@ -63,7 +75,10 @@ const toExport = {
     postTodo: { method: postTodo, errorMessage: "Could not post todo" },
     patchTodo: { method: patchTodo, errorMessage: "Could not patch todo" },
     deleteAllTodos: { method: deleteAllTodos, errorMessage: "Could not delete all todos" },
-    deleteTodo: { method: deleteTodo, errorMessage: "Could not delete todo" }
+    deleteTodo: { method: deleteTodo, errorMessage: "Could not delete todo" },
+    assignUser: { method: assignUser, errorMessage: "Could not assign user to todo" },
+    unassignUser: { method: unassignUser, errorMessage: "Could not unassing user to todo" }
+
 }
 
 for (let route in toExport) {
