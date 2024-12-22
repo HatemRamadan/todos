@@ -1,5 +1,6 @@
 const app = require('./server-config.js');
 const routes = require('./server-routes.js');
+const userRouter = require('./routes/user-router.js');
 
 const port = process.env.PORT || 5000;
 
@@ -12,6 +13,7 @@ app.patch('/:id', routes.patchTodo);
 app.delete('/', routes.deleteAllTodos);
 app.delete('/:id', routes.deleteTodo);
 
+app.use('/user', userRouter);
 if (process.env.NODE_ENV !== 'test') {
   app.listen(port, () => console.log(`Listening on port ${port}`));
 }
